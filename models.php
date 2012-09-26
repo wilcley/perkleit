@@ -119,7 +119,7 @@ class Player {
             die("Could not connect to database");
         }
     
-        $result = $db->query("SELECT * FROM Player WHERE player_hash = '$playerHash'");
+        $result = $db->query("SELECT * FROM player WHERE player_hash = '$playerHash'");
         if ($row = $result->fetch_assoc()) {
             $this->map = new Map($row['map_id']);
             $this->movesRemaining = $row['moves_remaining'];
