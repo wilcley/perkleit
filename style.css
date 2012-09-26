@@ -1,0 +1,45 @@
+.start {
+    background: #aaffaa;
+}
+
+.finish {
+    background: #ffffaa;
+}
+
+.closed {
+    background: #000000;
+}
+
+.open {
+    background: #ffffff;
+}
+
+.unknown {
+    background:  #aaaaaa;
+}
+
+.map {
+    border-collapse:  collapse;
+    float: left;
+    margin-right: 30px;
+}
+.map tr td {
+    width: 40px;
+    height: 40px;
+    border: solid 1px #000000;
+}
+
+.player{
+    background-image: url('player.png');
+}
+
+#plCounter {
+    padding: 15px;
+    margin-left: 30px;
+}
+
+#plCounterNumber{
+    display: block;
+    font-size: 30px;
+    font-weight: bold;
+}
