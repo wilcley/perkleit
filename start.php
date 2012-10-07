@@ -3,7 +3,9 @@ header('Content-type: application/json; charset=utf-8');
 require_once('models.php');
 
 
-$m = new Map(0);
+$mapID = 1; // for now get the one map in the database
+
+$m = new Map($mapID);
 
 // initially visible tiles
 $visible = array();
@@ -34,10 +36,9 @@ for ($i=0; $i<$m->width(); $i++) {
 }
 
 // add this game to the database
-$mapID = 1; // From map
-$movesRemaining = 25; // Max Moves
-$playerX = 0;
-$playerY = 0;
+$movesRemaining = $m->getMaxMoves();
+$playerX = $m->getStartX();
+$playerY = $m->getStartY();
 if ($db->query("INSERT INTO player(player_hash, map_id, moves_remaining, x, y) VALUES ('$hash', $mapID, $movesRemaining, $playerX, $playerY)")){
 
     // send game init to client

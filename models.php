@@ -34,20 +34,43 @@ class TileType {
     public $booster = Boosters::none;
     
     function __construct($open) {
-        $this->open = $open;
+        $this->open = (boolean) $open;
     }
 }
 
 class Map {
     private $tiles;
     private $maxMoves;
+    private $startX;
+    private $startY;
     
     function __construct($map_id) {
-        // fix this later. For now, add the one map
-        
-        // hard coded map that defines the $tiles variable used below
-        require('map1.php');
-        $this->tiles = $tiles;
+    	$db = new mysqli(DBSettings::host, DBSettings::username, DBSettings::password, DBSettings::database);
+    	if ($db->connect_errno) {
+    		die("Could not connect to database");
+    	}
+    	
+    	// define tile types
+    	$tileTypes = array();
+    	$result_tt = $db->query("SELECT * FROM tile_types");
+    	while ($row = $result_tt->fetch_assoc()) {
+    		$tileTypes[$row['tile_type_id']] = new TileType($row['open']);
+    		$tileTypes[$row['tile_type_id']]->special = (int) $row['special'];
+    	}
+    	
+    	// get tiles for this map
+    	$result_t = $db->query("SELECT * FROM tile WHERE map_id=$map_id");
+    	while ($row = $result_t->fetch_assoc()) {
+    		$this->tiles[$row['y']][$row['x']] = $tileTypes[$row['tile_type_id']];
+    	}
+    	
+    	// set maximum number of moves
+    	$result_m = $db->query("SELECT * FROM map WHERE map_id=$map_id");
+    	if ($row = $result_m->fetch_assoc()){
+    		$this->maxMoves = (int) $row['max_moves'];
+    		$this->startX = (int) $row['startX'];
+    		$this->startY = (int) $row['startY'];
+    	}
     }
     
     public function width() {
@@ -101,6 +124,14 @@ class Map {
     
     public function getMaxMoves(){
         return $this->maxMoves;
+    }
+    
+    public function getStartX(){
+    	return $this->startX;
+    }
+    
+    public function getStartY(){
+    	return $this->startY;
     }
     
 }
